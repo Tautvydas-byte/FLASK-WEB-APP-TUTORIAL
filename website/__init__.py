@@ -31,4 +31,4 @@ def create_database(app):
         db.create_all(app=app)
         print('Created Database!')
 
-# import .models as models - 'as' because cannot referance User class as .models.User
+# import .models as models - 'as' because cannot referance User class like .models.User
