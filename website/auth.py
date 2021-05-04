@@ -31,7 +31,7 @@ def login():
         else:
             flash('email does not exist', category='error')
 
-    return render_template("login.html", text="Testing", boolean=True)
+    return render_template("login.html", user=current_user)
 
 
 @auth.route('/logout')
@@ -71,7 +71,7 @@ def sign_up():
             flash('Account created!', category='success')
             # could be just '/', but then if change home url function, then need to change there also
             return redirect(url_for('views.home'))
-    return render_template("sign_up.html")
+    return render_template("sign_up.html", user=current_user)
 
 # pass - Suppose we have a loop or a function that is not implemented yet, but we want to implement it in the future.
 #  They cannot have an empty body. The interpreter would give an error.
