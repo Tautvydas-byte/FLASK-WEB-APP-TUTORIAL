@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from os import path
+from flask_login import LoginManager
 
 db = SQLAlchemy()  # create database
 DB_NAME = "database.db"
@@ -22,6 +23,15 @@ def create_app():
     from .models import User, Note  # importing Classes
 
     create_database(app)
+
+    login_manager = LoginManager()
+    login_manager.login_view = 'auth.login'  # dirrect if user not login
+    login_manager.init_app(app)
+
+    @login_manager.user_loader
+    def load_user(id):
+        # knows that searching by id, do not need id=id
+        return User.query.get(int(id))
 
     return app  # returnina app'sas
 

@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request, flash, redirect, url_for
 from .models import User
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db
+from flask_login import login_user, login_required, logout_user, current_user
 
 auth = Blueprint('auth', __name__)
 
@@ -22,6 +23,8 @@ def login():
         if user:
             if check_password_hash(user.password, password):
                 flash('Login in successfully!', category='success')
+                # remeber than user login, so do not login again by flask
+                login_user(user, remember=True)
                 return redirect(url_for('views.home'))
             else:
                 flash('Incorrect password, try again', category='error')
@@ -32,8 +35,10 @@ def login():
 
 
 @auth.route('/logout')
+@login_required  # cannot acces page unless user is login
 def logout():
-    return "<p>Logout</p>"
+    logout_user()
+    return redirect(url_for('auth.login'))
 
 
 @auth.route('/sign-up', methods=['GET', 'POST'])  # only POST request
@@ -61,6 +66,8 @@ def sign_up():
                             password=generate_password_hash(password1, method='sha256'))  # creting new user, password koduoja sha256 formatu
             db.session.add(new_user)
             db.session.commit()
+            login_user(user, remember=True)
+
             flash('Account created!', category='success')
             # could be just '/', but then if change home url function, then need to change there also
             return redirect(url_for('views.home'))
