@@ -62,11 +62,11 @@ def sign_up():
         elif len(password1) < 7:
             flash('Password must be at least 7 characters.', category='error')
         else:
-            new_user = User(email=email, first_name='firs_name',
+            new_user = User(email=email, first_name='first_name',
                             password=generate_password_hash(password1, method='sha256'))  # creting new user, password koduoja sha256 formatu
             db.session.add(new_user)
             db.session.commit()
-            login_user(user, remember=True)
+            login_user(new_user, remember=True)
 
             flash('Account created!', category='success')
             # could be just '/', but then if change home url function, then need to change there also
